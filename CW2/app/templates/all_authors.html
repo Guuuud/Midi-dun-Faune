@@ -1,0 +1,19 @@
+{% extends "base.html" %} {% block title %}Login{% endblock %} {% block content
+%}
+<br><br>
+<h4 class = "text-primary" style = "margin-left:10%">ALl authors</h4>
+<div class="container mx-auto border border-2 border-secondary rounded-3" style = "width: 80%;">
+
+    <h4 class = text-primary>All authors</h4>
+{% for i in authors %}
+    <div class="col">
+        <div class = "row">
+            <h4>{{ i.name }}</h4>
+        </div>
+
+    </div>
+
+{% endfor %}
+
+</div>
+{% endblock %}

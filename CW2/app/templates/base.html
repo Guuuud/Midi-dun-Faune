@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %} {% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'custom.css')}}">
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+
+
+    <script>
+       $(document).ready(function(){
+	$(".COnly").click(function(){
+		$(".NDone").hide();
+		$(".Done").show();
+	});
+	$(".UOnly").click(function(){
+		$(".Done").hide();
+		$(".NDone").show()
+	});
+	$(".All").click(function(){
+		$(".Done").show();
+		$(".NDone").show()
+	});
+});
+
+
+    </script>
+
+</head>
+
+
+<body>
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">Home</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+                aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/login">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/register">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/logout">Logout</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/profile/{{user.id}}">profile</a>
+                </li>
+                 <li class="nav-item">
+                    <a class="nav-link active" href="/all">allmusic</a>
+                </li>
+                </li>
+                 <li class="nav-item">
+                    <a class="nav-link active" href="/allusers">alluser</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/add">Add music</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/add_author">Add author</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/all_authors">All author</a>
+                </li>
+            </ul>
+            {% if user.name %}
+            <span class="navbar-text text-primary ">
+        Login as {{ user.name }}
+      </span>
+            {% else %}
+            <span class="navbar-text">
+        德意志安魂曲
+      </span>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category,message in messages %}
+{% if category == 'f' %}
+<!--<div class="toast align-items-center text-white bg-primary" role="alert" aria-live="assertive" aria-atomic="true" style = "margin-top:200px;">-->
+<!--  <div class="d-flex">-->
+<!--    <div class="toast-body">-->
+<!--      {{ message }}-->
+<!--    </div>-->
+<!--    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>-->
+<!--  </div>-->
+<!--</div>-->
+<div class="alert alter-dismissable fade show text-white bg-danger fs-6" role="alert">
+    {{ message }}
+    <!--    <button class = "close" data-dismiss = "alert">-->
+    <!--      <span aria-hidden="true">&times;</span>-->
+    <!--    </button>-->
+    <button type="button" class="pclose btn-close btn-close-white me-2 m-auto" data-dismiss="alert"
+            aria-label="Close"></button>
+
+</div>
+{% else %}
+<div class="alert alert-success alter-dismissable fade show text-white bg-primary fs-6" role="alert">
+    {{ message }}
+    <button type="button" class="pclose btn-close btn-close-white me-2 m-auto" data-dismiss="alert"
+            aria-label="Close"></button>
+
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+
+<div class="container-fluid">
+    {%block content %}
+
+    {% endblock %}
+</div>
+
+<br><br><br><br><br><br><br><br><br>
+<footer class="page-footer font-small bg-light fixed-bottom ">
+
+    <!-- Copyright -->
+    <div class="footer-copyright text-center py-3">© 2021 Copyright:
+        <a href="https://mdbootstrap.com/"> SHC</a>
+    </div>
+    <!-- Copyright -->
+
+</footer>
+<br><br>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+        crossorigin="anonymous"></script>
+<script
+        src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"
+></script>
+<script
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"
+></script>
+<script
+        src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"
+></script>
+
+<script
+        type="text/javascript"
+        src="{{ url_for('static', filename='yun.js') }}"
+></script>
+
+
+</body>
+
+</body>
+</html>

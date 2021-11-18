@@ -1,0 +1,50 @@
+{% extends "base.html" %} {% block title %}Login{% endblock %}
+{% block content
+%}
+
+
+
+{% if  status == 0 and is_following == False%}
+<br><br>
+<!--    <button type="submit" class="btn btn-primary">Follow</button>-->
+    <a href = "/follow/{{ view_user.name }}"  class="btn btn-primary"> Follow</a>
+{% elif status == 0 and is_following == True %}
+    <a href = "/unfollow/{{ view_user.name }}"  class="btn btn-danger"> Unfollow</a>
+
+{% endif %}
+
+<br><br>
+<div class="row">
+    <div class="col">
+        <h5 class="text-primary">你的个人信息</h5>
+        <p class="text-primary">Name: {{ view_user.name }}</p>
+        <p class="text-primary">Email: {{ view_user.email }}</p>
+
+    </div>
+
+    <div class="col">
+        <h5 class="text-danger">你喜欢的音乐</h5>
+        {% for i in musics %}
+        <p>{{ i.name }}</p>
+        {% endfor %}
+
+    </div>
+
+   <div class="col text-danger">
+        <h5 class="text-danger">你的粉丝 </h5>
+        {% for follower in followers %}
+       <a href = "/profile/{{ follower.follower_id }}">{{ follower.follower_name }}</a>
+        {% endfor %}
+
+    </div>
+
+   <div class="col text-danger">
+        <h5 class="text-danger">你关注的人 </h5>
+        {% for followed in followed %}
+       <a href = "/profile/{{ followed.followed_id }}">{{ followed.followed_name }}</a>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}

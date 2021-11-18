@@ -1,0 +1,44 @@
+{% extends "base.html" %} {% block title %}Login{% endblock %} {% block content
+%}
+<br><br>
+<h4 class = "text-primary" style = "margin-left:10%">Login Page</h4>
+<div class="container mx-auto border border-2 border-secondary rounded-3" style = "width: 80%;">
+
+    <div class = "row">
+        <div class = "col  p-5">
+            <form method="POST">
+        <p class = " text-secondary">Please Login to access the page</p>
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    name="email"
+                    placeholder="Enter email"
+                    required
+            />
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    name="password"
+                    placeholder="Enter password"
+                    required
+            />
+        </div>
+                <br>
+                <a href = "/register" style = "text-decoration:none;">Didn't have an account? Create one</a>
+        <br>
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %} {% block title %}Sign Up{% endblock %} {% block
+content %}
+
+<br><br>
+<h4 class = "text-primary" style = "margin-left:10%">Register Page</h4>
+
+<div class="container mx-auto border border-2 border-secondary rounded-3" style = "width: 80%;">
+    <div class = "row">
+        <div class = "col  p-5">
+
+<form  method="POST" style = "width:90%;">
+  <p class = "text-secondary">Register an account to use our todo list</p>
+
+  <div class="form-group" >
+    <label for="name">Name</label>
+    <input required name = "name" type="text" class="form-control" id="name" placeholder="Enter name">
+  </div>
+  <br>
+  <div class="form-group" >
+    <label for="exampleInputEmail1">Email address</label>
+    <input  required name = "email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+  </div>
+<br>
+  <div class="form-group">
+    <label for="password1">Password1</label>
+    <input required name = "password1" type="password" class="form-control" id="password1" placeholder="Password">
+  </div>
+<br>
+  <div class="form-group">
+    <label for="password2">Password2</label>
+    <input required name = "password2" type="password" class="form-control" id="password2" placeholder="Confirm your password">
+  </div>
+
+  <br>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

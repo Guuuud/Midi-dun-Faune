@@ -1,0 +1,23 @@
+{% extends "base.html" %} {% block title %}Login{% endblock %} {% block content
+%}
+<br><br>
+<h4 class = "text-primary" style = "margin-left:10%">All users</h4>
+<div class="container mx-auto border border-2 border-secondary rounded-3" style = "width: 80%;">
+
+{% for user in all_users %}
+    <div class="row">
+        <div class = "col">
+            <h4>{{ user.name }}</h4>
+        </div>
+        <div class = "col">
+            <h4>{{ user.email}}</h4>
+        </div>
+        <div class = "col">
+            <a href="/profile/{{user.id}}">Profile</a>
+        </div>
+    </div>
+
+{% endfor %}
+
+</div>
+{% endblock %}
