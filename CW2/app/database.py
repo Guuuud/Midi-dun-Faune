@@ -4,6 +4,7 @@ from flask_login import UserMixin, AnonymousUserMixin
 from flask import current_app
 from datetime import datetime
 import hashlib
+
 ADMIN = 'sc19hcs@leeds'
 
 
@@ -71,6 +72,49 @@ favorites = db.Table('favorites',
                      )
 
 
+# comments of comments
+class Coc(db.Model):
+    __tablename__ = "coc"
+    follows_id = db.Column(db.Integer, db.ForeignKey('comments.id'))
+    # followed comments
+    followed_id = db.Column(db.Integer, db.ForeignKey('comments.id'), primary_key=True)
+    # followed comments portrait
+    followed_por = db.Column(db.Integer, db.ForeignKey('comments.portrait'))
+    #followed comments name
+    followed_name = db.Column(db.Integer, db.ForeignKey('comments.name'))
+    followed = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    # comments follow comments
+
+
+
+class Comment(db.Model):
+    __tablename__ = "comments"
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    author_name = db.Column(db.String(100), db.ForeignKey('users.name'))
+    music_id = db.Column(db.Integer, db.ForeignKey('music.id'))
+    body_html = db.Column(db.Text)
+    portrait = db.Column(db.String(100), db.ForeignKey('users.portrait'))
+    cfc = db.relationship('Coc',foreign_keys=[Coc.followed_id],
+                          backref=db.backref('cfc',lazy = "joined"),
+                          lazy = 'dynamic',
+                          cascade='all,delete-orphan'
+                          )
+    def add(self, comment):
+
+        cfc = Coc(follows_idcfc = self.id,followed_por = comment.portrait,
+                  followed_name = comment.name,followed = comment.body,
+                  )
+        db.session.add(cfc)
+
+
+    def delete(self, comment):
+        cfc = Coc.query.filter_by(followed_id = comment.id).first()
+        db.session.add(cfc)
+
 class Music(db.Model):
     __tablename__ = 'music'
     id = db.Column(db.Integer, primary_key=True)
@@ -79,13 +123,15 @@ class Music(db.Model):
     aid = db.Column(db.Integer, db.ForeignKey('author.id'))
     # category = db.Column(db.String(30))
     # description = db.Column(db.String(2000))
+    comments = db.relationship('Comment', backref="music", lazy='dynamic')
 
 
 class Author(db.Model):
     __tablename__ = 'author'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100),unique=True)
+    name = db.Column(db.String(100), unique=True)
     selected = db.Column(db.Integer)
+
 
 class Follow(db.Model):
     __tablename__ = 'follows'
@@ -93,9 +139,9 @@ class Follow(db.Model):
     followed_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
     followed_name = db.Column(db.String(100), db.ForeignKey('users.name'))
     follower_name = db.Column(db.String(100), db.ForeignKey('users.name'))
-
+    follower_portrait = db.Column(db.String(100), db.ForeignKey('users.portrait'))
+    # followed_portrait = db.Column(db.String(100),db.ForeignKey('users.portrait'))
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
-
 
 
 class User(db.Model, UserMixin):
@@ -105,7 +151,8 @@ class User(db.Model, UserMixin):
     name = db.Column(db.String(64))
     email = db.Column(db.String(20), unique=True)
     password = db.Column(db.String(50))
-    # real_avatar = db.Column(db.String(128), default = None)
+    portrait = db.Column(db.String(100), default=None)
+    comments = db.relationship('Comment', backref="author", lazy='dynamic')
 
     likelist = db.relationship('Music', secondary='favorites', backref=db.backref('users', lazy='dynamic'),
                                lazy='dynamic')
@@ -120,7 +167,7 @@ class User(db.Model, UserMixin):
                                 lazy='dynamic',
                                 cascade='all,delete-orphan')
 
-    def gravatar(self,size = 100, default = 'identicon', rating='g'):
+    def gravatar(self, size=100, default='identicon', rating='g'):
         url = 'https://secure.gravatar.com/avatar'
         hash = hashlib.md5(self.email.lower().encode('utf-8')).hexdigest()
         return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(
@@ -128,7 +175,7 @@ class User(db.Model, UserMixin):
 
     def follow(self, user):
         if not self.is_following(user):
-            f = Follow(follower=self, followed=user,followed_name=user.name,follower_name = self.name)
+            f = Follow(follower=self, followed=user, followed_name=user.name, follower_name=self.name)
             db.session.add(f)
 
     def unfollow(self, user):
@@ -171,4 +218,3 @@ class User(db.Model, UserMixin):
         self.last_seen = datetime.utcnow()
         db.session.add(self)
         db.session.commit()
-

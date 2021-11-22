@@ -19,12 +19,15 @@ def create_app():
     app.config['SECRET_KEY'] = 'SD'
     app.config['ADMIN'] = 'sc19hcs@leeds'
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+    app.config['UPLOAD_FOLDER'] = '../static/file'
     db.init_app(app)
 
     from .view import view
     from .auth import auth
+    from .file import file
     app.register_blueprint(view, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
+    app.register_blueprint(file, url_prefix='/')
 
     from .database import User
     create_db(app)
@@ -41,3 +44,6 @@ def create_app():
 def create_db(app):
     if not path.exists("CW2/" + DB_NAME):
         db.create_all(app=app)
+
+
+

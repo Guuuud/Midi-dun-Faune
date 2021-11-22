@@ -4,7 +4,7 @@ from .database import *
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
-
+import os
 auth = Blueprint('auth', __name__)
 
 
@@ -28,6 +28,11 @@ def login():
     return render_template("login.html", user=current_user)
 
 
+ALLOWED_EXTENSIONS = {'mp3', 'mp4', 'png', 'jpg', 'jpeg'}
+def file_allowed(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -35,8 +40,7 @@ def register():
         name = request.form.get('name')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
-        about_me = ' '
-        location = 'beijing'
+        default_potrait = "200326124155_1_900x600的副本.jpg"
         user = User.query.filter_by(email=email).first()
         if user:
             flash("Email does exist", category="f")
@@ -45,7 +49,7 @@ def register():
         elif len(password1) < 6:
             flash("Password must be at least 6 characters", category="f")
         else:
-            new = User(email=email, name=name,
+            new = User(portrait = default_potrait,email=email, name=name,
                        password=generate_password_hash(password2))
             # role = Role(id = current_user.id)
 
